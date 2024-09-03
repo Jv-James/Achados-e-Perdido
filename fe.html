@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Itens</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 10px;
+            color: red;
+        }
+
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #login-form input {
+            margin-bottom: 10px;
+        }
+
+        #admin-controls, #student-controls {
+            display: none;
+        }
+
+        #logoutBtn, #logoutBtnStudent {
+            float: right;
+            margin-top: -37px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-form">
+            <h1>Login</h1>
+            <div class="form-group">
+                <label for="username">Usuário:</label>
+                <input type="text" id="username">
+            </div>
+            <div class="form-group">
+                <label for="password">Senha:</label>
+                <input type="password" id="password">
+            </div>
+            <button id="loginBtn">Entrar</button>
+            <div id="login-message"></div>
+        </div>
+
+        <div id="admin-controls">
+            <h1>Gerenciamento de Itens (Admin)</h1>
+            <div class="form-group">
+                <label for="DescripItem">Item Encontrado:</label>
+                <input type="text" id="DescripItem">
+            </div>
+            <div class="form-group">
+                <label for="OwnerItem">Descrição do Item:</label>
+                <input type="text" id="OwnerItem">
+            </div>
+            <div class="form-group">
+                <label for="DeptInp">Tipo de Item:</label>
+                <select id="DeptInp">
+                    <option value="Caderno">Caderno</option>
+                    <option value="Bolsa">Bolsa</option>
+                    <option value="Carregador">Carregador</option>
+                    <option value="Carteira">Carteira</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="LocalInp">Local Armazenado:</label>
+                <select id="LocalInp">
+                    <option value="Cordenação">Cordenação</option>
+                    <option value="Portaria">Portaria</option>
+                    <option value="Secretaria">Secretaria</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="CnicInp">N.º Identificador:</label>
+                <input type="number" id="CnicInp">
+            </div>
+            <div class="form-group">
+                <label for="itemPhoto">Foto do Item:</label>
+                <input type="file" id="itemPhoto" accept="image/*">
+            </div>
+            <div class="button-group">
+                <button id="AddBtn">Adicionar</button>
+                <button id="RetrieveBtn">Buscar</button>
+                <button id="UpdateBtn">Atualizar</button>
+                <button id="RemoveBtn">Deletar</button>
+            </div>
+            <button id="logoutBtn">Sair</button>
+        </div>
+
+        <div id="student-controls">
+            <h1>Visualização de Itens (Aluno)</h1>
+            <div class="form-group">
+                <label for="DescripItemStudent">Item Perdido:</label>
+                <input type="text" id="DescripItemStudent">
+            </div>
+            <div class="form-group">
+                <label for="OwnerItemStudent">Descrição do Item:</label>
+                <input type="text" id="OwnerItemStudent" readonly>
+            </div>
+            <div class="form-group">
+                <label for="DeptInpStudent">Tipo de Item:</label>
+                <select id="DeptInpStudent" disabled>
+                    <option value="Caderno">Caderno</option>
+                    <option value="Bolsa">Bolsa</option>
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Carteira">Carteira</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="LocalInpStudent">Local Armazenado:</label>
+                <select id="LocalInpStudent" disabled>
+                    <option value="Cordenação">Cordenação</option>
+                    <option value="Portaria">Portaria</option>
+                    <option value="Professor">Professor</option>
+                    <option value="Armário">Armário</option>
+                    <option value="Secretaria">Secretaria</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="CnicInpStudent">N.º Identificador:</label>
+                <input type="number" id="CnicInpStudent">
+            </div>
+            <button id="RetrieveBtnStudent">Buscar</button>
+            <div id="messageStudent"></div>
+            <button id="logoutBtnStudent">Sair</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+        import { getDatabase, ref, child, get, set, update, remove, push } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
+        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-storage.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDQNwSYxianbv9I8fr4ades8bNOt5rHcds",
+            authDomain: "tcc-senai-377b8.firebaseapp.com",
+            projectId: "tcc-senai-377b8",
+            storageBucket: "tcc-senai-377b8.appspot.com",
+            messagingSenderId: "755181160611",
+            appId: "1:755181160611:web:35d69cd245b84775149716",
+            measurementId: "G-79N65NY2Z5"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const storage = getStorage(app);
+
+        // Admin and Student Elements
+        const loginForm = document.getElementById('login-form');
+        const adminControls = document.getElementById('admin-controls');
+        const studentControls = document.getElementById('student-controls');
+
+        const DescripItem = document.getElementById('DescripItem');
+        const OwnerItem = document.getElementById('OwnerItem');
+        const DeptInp = document.getElementById('DeptInp');
+        const LocalInp = document.getElementById('LocalInp');
+        const CnicInp = document.getElementById('CnicInp');
+        const AddBtn = document.getElementById('AddBtn');
+        const RetrieveBtn = document.getElementById('RetrieveBtn');
+        const UpdateBtn = document.getElementById('UpdateBtn');
+        const RemoveBtn = document.getElementById('RemoveBtn');
+        const itemPhoto = document.getElementById('itemPhoto');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const DescripItemStudent = document.getElementById('DescripItemStudent');
+        const OwnerItemStudent = document.getElementById('OwnerItemStudent');
+        const DeptInpStudent = document.getElementById('DeptInpStudent');
+        const LocalInpStudent = document.getElementById('LocalInpStudent');
+        const CnicInpStudent = document.getElementById('CnicInpStudent');
+        const RetrieveBtnStudent = document.getElementById('RetrieveBtnStudent');
+        const logoutBtnStudent = document.getElementById('logoutBtnStudent');
+
+        // Helper function to clear image previews
+        function clearPreviousImage(container) {
+            const previousImage = container.querySelector('img');
+            if (previousImage) {
+                container.removeChild(previousImage);
+            }
+        }
+
+        async function retData() {
+            const dbRef = ref(db);
+            const cnicValue = CnicInp.value;
+            const DescripItemValue = DescripItem.value;
+
+            // Clear previous fields and images
+            DescripItem.value = '';
+            OwnerItem.value = '';
+            DeptInp.value = '';
+            LocalInp.value = '';
+            clearPreviousImage(adminControls);
+
+            if (cnicValue) {
+                // Search by CNIC
+                try {
+                    const snapshot = await get(child(dbRef, 'ObjectSet/' + cnicValue));
+                    if (snapshot.exists()) {
+                        DescripItem.value = snapshot.val().nameofobject;
+                        OwnerItem.value = snapshot.val().nameofowner;
+                        DeptInp.value = snapshot.val().department;
+                        LocalInp.value = snapshot.val().local;
+
+                        if (snapshot.val().photoURL) {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = snapshot.val().photoURL;
+                            imgElement.alt = "Foto do item";
+                            imgElement.style.maxWidth = "100%";
+                            adminControls.appendChild(imgElement);
+                        }
+                    } else {
+                        alert("Nenhum dado disponível para este CNIC");
+                    }
+                } catch (error) {
+                    alert("Erro ao buscar dados");
+                    console.error(error);
+                }
+            } else if (DescripItemValue) {
+                // Search by item description
+                try {
+                    const snapshot = await get(child(dbRef, 'ObjectSet'));
+                    if (snapshot.exists()) {
+                        const data = snapshot.val();
+                        let found = false;
+
+                        for (const key in data) {
+                            if (data[key].nameofobject === DescripItemValue) {
+                                DescripItem.value = data[key].nameofobject;
+                                OwnerItem.value = data[key].nameofowner;
+                                DeptInp.value = data[key].department;
+                                LocalInp.value = data[key].local;
+                                CnicInp.value = key; // Fill CNIC input with found key
+                                found = true;
+
+                                if (data[key].photoURL) {
+                                    const imgElement = document.createElement('img');
+                                    imgElement.src = data[key].photoURL;
+                                    imgElement.alt = "Foto do item";
+                                    imgElement.style.maxWidth = "50%";
+                                    adminControls.appendChild(imgElement);
+                                }
+                                break;
+                            }
+                        }
+
+                        if (!found) {
+                            alert("Nenhum dado disponível para esta descrição");
+                        }
+                    }
+                } catch (error) {
+                    alert("Erro ao buscar dados");
+                    console.error(error);
+                }
+            } else {
+                alert("Por favor, insira o CNIC ou a descrição do item para buscar.");
+            }
+        }
+
+        async function retDataStudent() {
+    const dbRef = ref(db);
+    const cnicValue = CnicInpStudent.value;
+    const DescripItemStudentValue = DescripItemStudent.value; // Nova variável para guardar a descrição do item
+
+    // Limpar campos e imagens anteriores
+    DescripItemStudent.value = '';
+    OwnerItemStudent.value = '';
+    DeptInpStudent.value = '';
+    LocalInpStudent.value = '';
+    const previousImage = studentControls.querySelector('img');
+    if (previousImage) {
+        studentControls.removeChild(previousImage);
+    }
+
+    if (cnicValue) {
+        // Busca por CNIC
+        try {
+            const snapshot = await get(child(dbRef, 'ObjectSet/' + cnicValue));
+            if (snapshot.exists()) {
+                DescripItemStudent.value = snapshot.val().nameofobject;
+                OwnerItemStudent.value = snapshot.val().nameofowner;
+                DeptInpStudent.value = snapshot.val().department;
+                LocalInpStudent.value = snapshot.val().local;
+
+                if (snapshot.val().photoURL) {
+                    const imgElement = document.createElement('img');
+                    imgElement.src = snapshot.val().photoURL;
+                    imgElement.alt = "Foto do item";
+                    imgElement.style.maxWidth = "100%";
+                    studentControls.appendChild(imgElement);
+                }
+            } else {
+                alert("Nenhum dado disponível para este CNIC");
+            }
+        } catch (error) {
+            alert("Erro ao buscar dados");
+            console.error(error);
+        }
+    } else if (DescripItemStudentValue) {
+        // Busca por descrição do item
+        try {
+            const snapshot = await get(child(dbRef, 'ObjectSet'));
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                let found = false;
+
+                for (const key in data) {
+                    if (data[key].nameofobject === DescripItemStudentValue) {
+                        DescripItemStudent.value = data[key].nameofobject;
+                        OwnerItemStudent.value = data[key].nameofowner;
+                        DeptInpStudent.value = data[key].department;
+                        LocalInpStudent.value = data[key].local;
+                        CnicInpStudent.value = key; // Preenche o CNIC input com a chave encontrada
+                        found = true;
+
+                        if (data[key].photoURL) {
+                            const imgElement = document.createElement('img');
+                            imgElement.src = data[key].photoURL;
+                            imgElement.alt = "Foto do item";
+                            imgElement.style.maxWidth = "50%";
+                            studentControls.appendChild(imgElement);
+                        }
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    alert("Nenhum dado disponível para esta descrição");
+                }
+            }
+        } catch (error) {
+            alert("Erro ao buscar dados");
+            console.error(error);
+        }
+    } else {
+        alert("Por favor, insira o CNIC ou a descrição do item para buscar.");
+    }
+}
+        // Login and logout functionality
+        document.getElementById('loginBtn').addEventListener('click', () => {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'admin' && password === 'admin') {
+                loginForm.style.display = 'none';
+                adminControls.style.display = 'block';
+            } else if (username === 'aluno' && password === 'aluno') {
+                loginForm.style.display = 'none';
+                studentControls.style.display = 'block';
+            } else {
+                document.getElementById('login-message').innerText = 'Usuário ou senha incorretos';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            adminControls.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        document.getElementById('logoutBtnStudent').addEventListener('click', () => {
+            studentControls.style.display = 'none';
+            loginForm.style.display = 'block';
+        });
+
+        AddBtn.addEventListener('click', async () => {
+            const DescripItemValue = DescripItem.value;
+            const OwnerItemValue = OwnerItem.value;
+            const DeptInpValue = DeptInp.value;
+            const LocalInpValue = LocalInp.value;
+            const CnicInpValue = CnicInp.value;
+
+            if (DescripItemValue && OwnerItemValue && DeptInpValue && LocalInpValue && CnicInpValue) {
+                try {
+                    let photoURL = '';
+                    if (itemPhoto.files.length > 0) {
+                        const file = itemPhoto.files[0];
+                        const storagePath = `images/${file.name}`;
+                        const storageReference = storageRef(storage, storagePath);
+                        await uploadBytes(storageReference, file);
+                        photoURL = await getDownloadURL(storageReference);
+                    }
+
+                    await set(ref(db, 'ObjectSet/' + CnicInpValue), {
+                        nameofobject: DescripItemValue,
+                        nameofowner: OwnerItemValue,
+                        department: DeptInpValue,
+                        local: LocalInpValue,
+                        photoURL: photoURL
+                    });
+
+                    alert("Item adicionado com sucesso");
+                } catch (error) {
+                    alert("Erro ao adicionar item");
+                    console.error(error);
+                }
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        });
+
+        UpdateBtn.addEventListener('click', async () => {
+            const DescripItemValue = DescripItem.value;
+            const OwnerItemValue = OwnerItem.value;
+            const DeptInpValue = DeptInp.value;
+            const LocalInpValue = LocalInp.value;
+            const CnicInpValue = CnicInp.value;
+
+            if (DescripItemValue && OwnerItemValue && DeptInpValue && LocalInpValue && CnicInpValue) {
+                try {
+                    let photoURL = '';
+                    if (itemPhoto.files.length > 0) {
+                        const file = itemPhoto.files[0];
+                        const storagePath = `images/${file.name}`;
+                        const storageReference = storageRef(storage, storagePath);
+                        await uploadBytes(storageReference, file);
+                        photoURL = await getDownloadURL(storageReference);
+                    }
+
+                    await update(ref(db, 'ObjectSet/' + CnicInpValue), {
+                        nameofobject: DescripItemValue,
+                        nameofowner: OwnerItemValue,
+                        department: DeptInpValue,
+                        local: LocalInpValue,
+                        photoURL: photoURL
+                    });
+
+                    alert("Item atualizado com sucesso");
+                } catch (error) {
+                    alert("Erro ao atualizar item");
+                    console.error(error);
+                }
+            } else {
+                alert("Por favor, preencha todos os campos.");
+            }
+        });
+
+        RemoveBtn.addEventListener('click', async () => {
+            const CnicInpValue = CnicInp.value;
+
+            if (CnicInpValue) {
+                try {
+                    await remove(ref(db, 'ObjectSet/' + CnicInpValue));
+                    alert("Item removido com sucesso");
+                } catch (error) {
+                    alert("Erro ao remover item");
+                    console.error(error);
+                }
+            } else {
+                alert("Por favor, insira o CNIC do item a ser removido.");
+            }
+        });
+
+        RetrieveBtn.addEventListener('click', retData);
+        RetrieveBtnStudent.addEventListener('click', retDataStudent);
+    </script>
+</body>
+</html>
